@@ -86,7 +86,7 @@ let setting_h = 100;
 let setting_x = c.width-setting_w*3/2;
 let setting_y = c.width-setting_h*3/2;
 
-//クリックしたらフラグ起動
+//フラグによる画面遷移の管理
 c.addEventListener('click',function(e){
   if(!stop_title_flag){
     var rect = e.target.getBoundingClientRect();
@@ -110,6 +110,7 @@ c.addEventListener('click',function(e){
 
 //表示
 function loop(){
+  //スタート画面
   if(!stop_title_flag){
     ctx.fillStyle = "#005731";
     ctx.globalAlpha = 1.0;
@@ -118,11 +119,15 @@ function loop(){
     logo.draw();
     requestAnimationFrame(loop);
   }
+  
+  //設定画面
   if(start_setting_flag){
     ctx.fillStyle = "#005731";
     ctx.globalAlpha = 1.0;
     ctx.fillRect(0, 0, c.width, c.height);
   }
+  
+  //ゲーム画面
   if(start_game_flag){
     ctx.fillStyle = "#005731";
     ctx.globalAlpha = 1.0;
