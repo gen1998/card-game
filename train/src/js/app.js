@@ -122,6 +122,29 @@ let card = new function() {
   }
 }
 
+//プレイ画面カード手持ち表示
+let  space =new function(){
+
+  this.draw =function(){
+    let space_x =c.width/20;
+
+    for (let index = 0; index < 13; index++) {
+    
+      this.img = new Image();
+      this.img.src = "images/heart3.jpg";
+      
+      let space_y=c.height-this.img.height;
+      let distance=(c.width*0.9-this.img.width)/12;
+  
+      ctx.drawImage(this.img,space_x,space_y);
+
+      space_x=space_x+distance;
+    }
+  }
+}
+
+
+
 //プレイ画面プレーヤー表示1
 let player1 = new function() {
   let x = c.width / 2;
@@ -206,6 +229,8 @@ function play_buttons(){
   //決定ボタンの文字
   let decide_letter_x=c.width/3;
   let decide_letter_y=c.width/2;
+  //let decide_font_size = 
+  //ctx.font = `${decide_font_size}pt メイリオ`;
   ctx.font = '40pt メイリオ';
   ctx.fillText('カードを出す', decide_letter_x, decide_letter_y);
 
@@ -215,6 +240,8 @@ function play_buttons(){
    ctx.font = '40pt メイリオ';
    ctx.fillText('パス', pass_letter_x, pass_letter_y);
 }
+
+
 
 
 
@@ -239,6 +266,7 @@ function loop(){
     ctx.globalAlpha = 1.0;
     ctx.fillRect(0, 0, c.width, c.height);
     card.draw();
+    space.draw();
     player1.draw();
     player2.draw();
     player3.draw();
