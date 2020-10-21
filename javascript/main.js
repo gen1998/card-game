@@ -51,7 +51,7 @@ function set_cards(){
 
 //plyerの手札から指定されたカードをpickする
 function pick_card(players_hands, player, play_card){
-  if (!play_card) return players_hands
+  if (play_card.length == 0) return players_hands
   let buff = players_hands
   let newPlayershands = players_hands[player].filter(x => (x.number != play_card.number || x.mark != play_card.mark))
   buff[player] = newPlayershands
@@ -61,10 +61,10 @@ function pick_card(players_hands, player, play_card){
 //plyerの手札の中で出せるカードを一覧にする
 function possible_pick_card(players_hands, player, board_cards){
   //場にカードが存在しない時
-  if (!board_cards) return players_hands[player]
+  if (board_cards.length == 0) return players_hands[player]
 
   const num_list = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1, 2]
-  let possible_cards = {}
+  let possible_cards = []
   if (board_cards.number < 3) {
     possible_cards = players_hands[player].filter(x => num_list.slice(board_cards.number+13-2).includes(x.number))
   } else {
@@ -75,7 +75,7 @@ function possible_pick_card(players_hands, player, board_cards){
 
 //randomにカードをピックする
 function choose_random(possible_cards) {
-  if (!possible_cards.length) return []
+  if (possible_cards.length == 0) return []
   let arrayIndex = Math.floor(Math.random() * possible_cards.length);
   return possible_cards[arrayIndex];
 }
@@ -111,10 +111,10 @@ while (true){
   possible_cards = possible_pick_card(players_hands, now_player, board_cards)
 
   //パスを三人したら場は流れる
-  if (board_player == now_player) board_cards = {}
+  if (board_player == now_player) board_cards = []
   
   //出せるカードがない場合
-  if (!possible_cards.length){
+  if (possible_cards.length == 0){
     console.log('pass')
     //pass_counter += 1
   }
