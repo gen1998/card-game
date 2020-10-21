@@ -122,6 +122,45 @@ let card = new function() {
   }
 }
 
+//クリックしたらフラグ起動(カードを選ぶと飛び出る)
+let choice_flag=false;
+let back_flag=false;
+
+c.addEventListener('click',function(e){
+  if(!choice_flag){
+    var rect = e.target.getBoundingClientRect();
+
+    this.img = new Image();
+    this.img.src = "images/heart3.jpg";
+
+    let space_x =c.width/20;
+    let distance=(c.width*0.9-this.img.width)/12;
+    let space_y=c.height-this.img.height;
+
+    if(space_x <= e.clientX && e.clientX <= space_x+distance && space_y <= e.clientY && e.clientY <= space_y+c.height){
+      ctx.clearRect(0,0,c.width,c.height); 
+      choice_flag=true; 
+    }  
+  }
+
+  /*if(!back_flag){
+    var rect = e.target.getBoundingClientRect();
+
+    this.img = new Image();
+    this.img.src = "images/heart3.jpg";
+
+    let space_x =c.width/20;
+    let distance=(c.width*0.9-this.img.width)/12;
+    let space_jump_y=c.height-this.img.height*4/3;
+
+    if(space_x <= e.clientX && e.clientX <= space_x+distance && space_jump_y <= e.clientY && e.clientY <= space_jump_y+this.img.height){ 
+      ctx.clearRect(0,0,c.width,c.height); 
+      back_flag=true; 
+      choice_flag=false;
+    }  
+  }*/
+});
+
 //プレイ画面カード手持ち表示
 let  space =new function(){
 
@@ -140,6 +179,35 @@ let  space =new function(){
 
       space_x=space_x+distance;
     }
+
+    if(choice_flag){
+      let space_x =c.width/20;
+      let space_y=c.height-this.img.height;
+      let space_jump_y=c.height-this.img.height*4/3;
+
+      this.img = new Image();
+      this.img.src = "images/heart3.jpg";
+
+      ctx.fillStyle = "#005731";
+      ctx.globalAlpha = 1.0;
+      ctx.fillRect(space_x,space_y ,this.img.width , this.img.height);
+
+      ctx.drawImage(this.img,space_x,space_jump_y);
+      
+    }
+    /*if(back_flag){
+      let space_x =c.width/20;
+      let space_y=c.height-this.img.height;
+
+      this.img = new Image();
+      this.img.src = "images/heart3.jpg";
+
+      ctx.fillStyle = "#005731";
+      ctx.globalAlpha = 1.0;
+      ctx.fillRect(space_x,space_y ,this.img.width , this.img.height);
+      ctx.drawImage(this.img,space_x,space_y);
+
+    }*/
   }
 }
 
@@ -275,7 +343,4 @@ function loop(){
   }
 }
 
-
-
 loop();
-
