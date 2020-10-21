@@ -92,14 +92,15 @@ let board_cards = {} //場のカード
 let players_hands = {} //全員の手札
 let now_player //番の人
 let pass_counter = 0 //パスした人数をcountする
+let board_player
 let game_players = players //順番・人数などを変更可能なゲームの参加者
-let player_counter = game_players.length //残っているゲームの参加者
 let now_player_counter = 0 //今全体で何手目か
 let win_players = []
 
 players_hands = set_cards()
 
 now_player = game_players[0]
+board_player = now_player
 //board_cards = {"number" : 2, "mark" : 3}
 
 
@@ -108,43 +109,48 @@ while (true){
   console.log('others : ', game_players)
   console.log('place : ', board_cards)
   possible_cards = possible_pick_card(players_hands, now_player, board_cards)
+
+  //パスを三人したら場は流れる
+  if (board_player == now_player) board_cards = {}
   
   //出せるカードがない場合
   if (!possible_cards.length){
     console.log('pass')
-    pass_counter += 1
+    //pass_counter += 1
   }
   //出せるカードがある場合
   else{
-    pass_counter = 0
+    //pass_counter = 0
     choose_card = choose_random(possible_cards)
     console.log('choose_cards : ', choose_card)
+    board_player = now_player
     players_hands = pick_card(players_hands, now_player, choose_card)
     board_cards = choose_card
   }
   
-  //パスを三人したら場は流れる
-  if (pass_counter == 3){
-    board_cards = {}
-    pass_counter = 0
-  }
+  
   
   //カードの枚数が0になったら上がり！
   if (players_hands[now_player].length == 0){
     console.log(now_player, "上がり！")
     win_players.push(now_player)
-    player_counter -= 1
+
+    now_player_counter = game_players.indexOf(now_player)
     game_players = game_players.filter(x => x!=now_player)
-    if (player_counter == 1){
+    now_player = game_players[now_player_counter%game_players.length]
+    board_player = now_player
+    
+    if (game_players.length == 1){
       console.log(game_players[0],"の負け！")
       win_players.push(game_players[0])
       break
     }
+    continue
   }
 
   //次にplayする人を決める
   now_player_counter += 1
-  now_player = game_players[now_player_counter%player_counter]
+  now_player = game_players[now_player_counter%game_players.length]
   //sleep(1000)
 }
 
