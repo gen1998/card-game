@@ -55,11 +55,11 @@ function start_buttons(){
   ctx.fillText('設定',setting_letter_x, setting_letter_y);
 
   //商標の文字
-  let trademark_setting_x=150;
-  let trademark_setting_y=c.height-80;
+  let trademark_box_x=150;
+  let trademark_box_y=c.height-80;
   ctx.fillStyle = 'white';
   ctx.font = '15pt メイリオ';
-  ctx.fillText('©2020 Musashi 91期 inc.', trademark_setting_x, trademark_setting_y); 
+  ctx.fillText('©2020 Musashi 91期 inc.', trademark_box_x, trademark_box_y); 
 }
 
 //初期画面ロゴ編
@@ -76,28 +76,35 @@ let logo = new function() {
 //設定画面入力項目
 function setting(){
   ctx.fillStyle = 'white';
-
-  let setting_x = c.width/16;
-  let setting_y = c.height/5;
-  let setting_w = 500;
-  let setting_h = 100;
-
-  let setting =['comの数','スペ3','5飛ばし','7渡し','8切り','10捨て','11バック','革命','階段革命','ドボン']
-
+  
+  let setting =['comの数','縛り','スペ3','5飛ばし','7渡し','8切り','10捨て','11バック','革命','ドボン']
+  let box={"x":c.width/16,"y":c.height/5,"w":c.width/3,"h":c.height/9}
+  let check={"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4}
+  /*let check=[]
+  check.push({"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4})*/
+  
   for (let index = 0; index < 10; index=index+2) {
-    ctx.fillRect(setting_x, setting_y, setting_w, setting_h);
-    ctx.fillRect(setting_x*8, setting_y, setting_w, setting_h);
+    ctx.fillRect(box.x, box.y, box.w, box.h);
+    ctx.fillRect(box.x*8, box.y, box.w, box.h);
+
+    ctx.strokeStyle = 'black';
+    ctx.strokeRect(check.x, check.y, check.w, check.h);
+    ctx.strokeRect(check.x+box.x*7, check.y, check.w, check.h);
 
     ctx.fillStyle = 'rgba(0,0,0)';
-    ctx.textAlign = "center";
+    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.font = '30pt メイリオ';
-    ctx.fillText(setting[index], setting_x+setting_w/2, setting_y+setting_h/2)
-    ctx.fillText(setting[index+1], setting_x*8+setting_w/2, setting_y+setting_h/2)
+    ctx.fillText(setting[index], box.x+box.w/5, box.y+box.h/2)
+    ctx.fillText(setting[index+1], box.x*8+box.w/5, box.y+box.h/2)
   
+    //check.push({"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4});
+
     let distance=c.height/7;
-    setting_y=setting_y+distance;
+    box.y=box.y+distance;
+    check.y=check.y+distance;
     ctx.fillStyle = 'white';
+
   }
 
   //戻るボタン
@@ -110,7 +117,33 @@ function setting(){
   ctx.font = '20pt メイリオ';
   ctx.fillText('戻る', setting_back_x+setting_back_w/2, setting_back_y+setting_back_h/2);
 
+  //設定画面チェックボタン
+  let  rule_flag=[] 
+  for (let index = 0; index < 10; index++) {
+        rule_flag.push(false);
+  }
+
+  c.addEventListener('click',function(e){
+    var rect = e.target.getBoundingClientRect();
+    //let distance=(c.width*0.9-this.img.width)/19;
+
+    for(let index =0;index<10;index++){
+      if(!rule_flag[index]){
+        if(position[index].x <= e.clientX && e.clientX <= position[index].x+distance && position[index].y <= e.clientY && e.clientY <= c.height){ 
+          //position[index].y=position[index].y-this.img.height/3;
+          rule_flag[index]=true; 
+        }  
+      } else {
+        if(position[index].x <= e.clientX && e.clientX <= position[index].x+distance && position[index].y <= e.clientY && e.clientY <= position[index].y+this.img.height){ 
+          //position[index].y=position[index].y+this.img.height/3;
+          rule_flag[index]=false; 
+        }  
+      }
+    }
+  });
+
 }
+
 
 //フラグ集（デフォルトはfalse）
 let stop_title_flag = false;
