@@ -29,6 +29,9 @@ let setting_back_y = c.height/10;
 let setting_back_w = 120;
 let setting_back_h = 50;
 
+//直したい
+let choiced_box = -1;
+
 //初期画面ボタン編
 function start_buttons(){
   //ボタン全体設定
@@ -79,39 +82,59 @@ function setting(){
   
   let setting =['comの数','縛り','スペ3','5飛ばし','7渡し','8切り','10捨て','11バック','革命','ドボン']
   let box={"x":c.width/16,"y":c.height/5,"w":c.width/3,"h":c.height/9}
-  let check={"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4}
-  /*let check=[]
-  check.push({"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4})*/
+  let check=[]
+  let y1 = box.y+box.h/8;
+  let y2 = box.y+box.h/8;
+
+  for (let index = 0; index < 10; index++){
+    if(index>=0 && index<5){
+      check.push({"x":box.x+box.w*2/3,"y":y1,"w":box.h*3/4,"h":box.h*3/4})
+      let distance=c.height/7;
+      y1=y1+distance;
+    }else{
+      check.push({"x":box.x*8+box.w*2/3,"y":y2,"w":box.h*3/4,"h":box.h*3/4})
+      let distance=c.height/7;
+      y2=y2+distance;
+    }
+  }
+
+  let yy1 = box.y;
+  let yy2 = box.y;
   
-  for (let index = 0; index < 10; index=index+2) {
-    ctx.fillRect(box.x, box.y, box.w, box.h);
-    ctx.fillRect(box.x*8, box.y, box.w, box.h);
-
+  for (let index = 0; index < 10; index++) {
+    ctx.fillStyle = 'white';
     ctx.strokeStyle = 'black';
-    ctx.strokeRect(check.x, check.y, check.w, check.h);
-    ctx.strokeRect(check.x+box.x*7, check.y, check.w, check.h);
-
-    ctx.fillStyle = 'rgba(0,0,0)';
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.font = '30pt メイリオ';
-    ctx.fillText(setting[index], box.x+box.w/5, box.y+box.h/2)
-    ctx.fillText(setting[index+1], box.x*8+box.w/5, box.y+box.h/2)
-  
-    //check.push({"x":box.x+box.w*2/3,"y":box.y+box.h/8,"w":box.h*3/4,"h":box.h*3/4});
 
-    let distance=c.height/7;
-    box.y=box.y+distance;
-    check.y=check.y+distance;
-    ctx.fillStyle = 'white';
-
+    if(index>=0 && index<5){
+      ctx.fillRect(box.x, yy1, box.w, box.h);
+      ctx.fillStyle = 'black';
+      ctx.fillText(setting[index], box.x+box.w/5, yy1+box.h/2)
+      let distance=c.height/7;
+      yy1=yy1+distance;
+    }else{
+      ctx.fillRect(box.x*8, yy2, box.w, box.h);
+      ctx.fillStyle = 'black';
+      ctx.fillText(setting[index], box.x*8+box.w/5, yy2+box.h/2)
+      let distance=c.height/7;
+      yy2=yy2+distance;
+    }
+    if(index==choiced_box){
+      ctx.fillStyle = 'black';
+      ctx.fillRect(check[index].x, check[index].y, check[index].w, check[index].h);
+    }else{
+      ctx.strokeRect(check[index].x, check[index].y, check[index].w, check[index].h);
+    }
   }
 
   //戻るボタン
+  ctx.fillStyle = 'white';
   ctx.fillRect(setting_back_x, setting_back_y, setting_back_w,setting_back_h);
   
   //文字
-  ctx.fillStyle = 'rgba(0,0,0)';
+  ctx.fillStyle = 'black';
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.font = '20pt メイリオ';
@@ -123,25 +146,32 @@ function setting(){
         rule_flag.push(false);
   }
 
+  //ctx.fillRect(check[0].x,check[0].y,check[0].w,check[0].h);
+
   c.addEventListener('click',function(e){
     var rect = e.target.getBoundingClientRect();
-    //let distance=(c.width*0.9-this.img.width)/19;
 
     for(let index =0;index<10;index++){
       if(!rule_flag[index]){
-        if(position[index].x <= e.clientX && e.clientX <= position[index].x+distance && position[index].y <= e.clientY && e.clientY <= c.height){ 
-          //position[index].y=position[index].y-this.img.height/3;
+        if(check[index].x <= e.clientX && e.clientX <= check[index].x+check[index].w && check[index].y <= e.clientY && e.clientY <= check[index].y+check[index].h){ 
+          console.log("check");
+          /*ctx.fillStyle = 'black';
+          ctx.fillRect(400,400,200,300);
+          ctx.fillRect(check[index].x,check[index].y,check[index].w,check[index].h);
+          ctx.fillRect(check[index].x+check[index].w/10,check[index].y+check[index].h/10,check[index].w*0.8,check[index].h*0.8);
           rule_flag[index]=true; 
+          console.log("!!");*/
+          choiced_box = index;
         }  
-      } else {
-        if(position[index].x <= e.clientX && e.clientX <= position[index].x+distance && position[index].y <= e.clientY && e.clientY <= position[index].y+this.img.height){ 
-          //position[index].y=position[index].y+this.img.height/3;
+      } /*else {
+        if(check[index].x <= e.clientX && e.clientX <= check[index].x+check[index].w && check[index].y <= e.clientY && e.clientY <= check[index].y+check[index].h){ 
+          ctx.fillStyle = 'white';
+          ctx.fillRect(check[index].x+check[index].w/10,check[index].y+check[index].h/10,check[index].w*0.8,check[index].h*0.8);
           rule_flag[index]=false; 
         }  
-      }
+      }*/
     }
   });
-
 }
 
 
