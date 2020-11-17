@@ -29,8 +29,12 @@ let setting_back_y = c.height/10;
 let setting_back_w = 120;
 let setting_back_h = 50;
 
-//直したい
-let choiced_box = -1;
+//choiced_box設定
+let  choiced_box=[] 
+  for (let index = 0; index < 10; index++) {
+        choiced_box.push(-1);
+        console.log(choiced_box);
+  }
 
 //初期画面ボタン編
 function start_buttons(){
@@ -80,7 +84,7 @@ let logo = new function() {
 function setting(){
   ctx.fillStyle = 'white';
   
-  let setting =['comの数','縛り','スペ3','5飛ばし','7渡し','8切り','10捨て','11バック','革命','ドボン']
+  let setting =['縛り','スペ3','5飛ばし','7渡し','8切り','10捨て','11バック','革命','階段革命','ドボン']
   let box={"x":c.width/16,"y":c.height/5,"w":c.width/3,"h":c.height/9}
   let check=[]
   let y1 = box.y+box.h/8;
@@ -121,13 +125,35 @@ function setting(){
       let distance=c.height/7;
       yy2=yy2+distance;
     }
-    if(index==choiced_box){
+    if(index==choiced_box[index]){
       ctx.fillStyle = 'black';
       ctx.fillRect(check[index].x, check[index].y, check[index].w, check[index].h);
     }else{
       ctx.strokeRect(check[index].x, check[index].y, check[index].w, check[index].h);
     }
   }
+
+  //人数設定ボタン
+  ctx.fillStyle = 'white';
+  let player={x:box.x*8,y:box.y-c.height/7} 
+  let up_box = {x:player.x+box.w*2/3-box.h/3,y:player.y+box.h/3,w:box.h/4,h:box.h/4}
+  let down_box ={x:player.x+box.w*2/3+box.h/3+box.h*3/4-up_box.w,y:player.y+box.h/3,w:box.h/4,h:box.h/4}
+  
+  ctx.fillRect(player.x, player.y, box.w, box.h);
+  ctx.strokeRect(player.x+box.w*2/3,player.y+box.h/8,box.h*3/4,box.h*3/4);
+  ctx.strokeRect(up_box.x,up_box.y,up_box.w,up_box.h);
+  ctx.strokeRect(down_box.x,down_box.y,down_box.w,down_box.h);
+
+  ctx.fillStyle = 'black';
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.font = '30pt メイリオ';
+  ctx.fillText('comの数',player.x+box.w/5,player.y+box.h/2);
+
+  ctx.textAlign = "center";
+  ctx.font = '16pt メイリオ';
+  ctx.fillText('▲',up_box.x+up_box.w/2,up_box.y+up_box.h/2);
+  ctx.fillText('▼',down_box.x+down_box.w/2,down_box.y+down_box.h/2);
 
   //戻るボタン
   ctx.fillStyle = 'white';
@@ -141,35 +167,19 @@ function setting(){
   ctx.fillText('戻る', setting_back_x+setting_back_w/2, setting_back_y+setting_back_h/2);
 
   //設定画面チェックボタン
-  let  rule_flag=[] 
-  for (let index = 0; index < 10; index++) {
-        rule_flag.push(false);
-  }
-
-  //ctx.fillRect(check[0].x,check[0].y,check[0].w,check[0].h);
-
   c.addEventListener('click',function(e){
     var rect = e.target.getBoundingClientRect();
 
     for(let index =0;index<10;index++){
-      if(!rule_flag[index]){
+      if(choiced_box[index] == -1){
         if(check[index].x <= e.clientX && e.clientX <= check[index].x+check[index].w && check[index].y <= e.clientY && e.clientY <= check[index].y+check[index].h){ 
-          console.log("check");
-          /*ctx.fillStyle = 'black';
-          ctx.fillRect(400,400,200,300);
-          ctx.fillRect(check[index].x,check[index].y,check[index].w,check[index].h);
-          ctx.fillRect(check[index].x+check[index].w/10,check[index].y+check[index].h/10,check[index].w*0.8,check[index].h*0.8);
-          rule_flag[index]=true; 
-          console.log("!!");*/
-          choiced_box = index;
+          choiced_box[index] = index;
         }  
-      } /*else {
+      }else {
         if(check[index].x <= e.clientX && e.clientX <= check[index].x+check[index].w && check[index].y <= e.clientY && e.clientY <= check[index].y+check[index].h){ 
-          ctx.fillStyle = 'white';
-          ctx.fillRect(check[index].x+check[index].w/10,check[index].y+check[index].h/10,check[index].w*0.8,check[index].h*0.8);
-          rule_flag[index]=false; 
+          choiced_box[index]=-1; 
         }  
-      }*/
+      }
     }
   });
 }
