@@ -93,6 +93,27 @@ function first_display(){
   let logo_y = c.height/4-logopic.height/2;
   ctx.drawImage(logopic, logo_x ,logo_y);
 
+  //タイトル左横・・ボタンとして使用しない
+  backleft = new Image();
+  backleft.src="../images/button/joker.png";
+  let backleft_x = c.width/4-backleft.width/3;
+  let backleft_y = c.height/10-backleft.height/20;
+  ctx.drawImage(backleft, backleft_x ,backleft_y ,backleft.width/1.5 ,backleft.height/1.5);
+
+  //タイトル右横・・ボタンとして使用しない
+  backright = new Image();
+  backright.src="../images/button/joker.png";
+  let backright_x = c.width*3/4-backright.width/3;
+  let backright_y = c.height/10-backright.height/20;
+  ctx.drawImage(backright, backright_x ,backright_y ,backright.width/1.5 ,backright.height/1.5);
+
+  //タイトル真下・・ボタンとして使用しない
+  underlogo = new Image();
+  underlogo.src="../images/button/joker.png";
+  let underlogo_x = c.width/2-underlogo.width/3;
+  let underlogo_y = c.height/2-underlogo.height/50;
+  ctx.drawImage(underlogo, underlogo_x ,underlogo_y ,underlogo.width/1.5 ,underlogo.height/1.5);
+
   //スタートボタン
   start_button = new Image();
   start_button.src="images/button/start.png";
