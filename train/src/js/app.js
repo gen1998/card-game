@@ -14,12 +14,12 @@ for(let i=0;i<=12;i++){
       let mark_s="spade";
       pic=new Image();
       pic.src="../images/card/"+String(mark_s)+String(i+1)+".jpg"
-      card.push({"number":i,"mark":j,"pic":pic,"x":0,"y":0,"check_flag":0,"finish_flag":0,"player":-1});
+      card.push({"number":i,"mark":j,"pic":pic,"x":0,"y":0,"check_flag":0,"finish_flag":0,"player":0});//本当は-1
     }else if(j==1){
       pic=new Image();
       let mark_c="club";
       pic.src="../images/card/"+String(mark_c)+String(i+1)+".jpg"
-      card.push({"number":i,"mark":j,"pic":pic,"x":0,"y":0,"check_flag":0,"finish_flag":0,"player":-1});let mark="club";
+      card.push({"number":i,"mark":j,"pic":pic,"x":0,"y":0,"check_flag":0,"finish_flag":0,"player":-1});
     }else if(j==2){
       let mark_h="heart";
       pic=new Image();
@@ -35,7 +35,17 @@ for(let i=0;i<=12;i++){
 }
 
 //console.log(card);
-//ctx.drawImage(card[0].pic, card[0].x ,card[0].y);//spade1
+//ctx.drawImage(card[0].pic, card[0].x ,card[0].y);//spade1//ここだと動かない
+
+//割り振りがある
+//自分のカードをplayer:0とする
+//cardリストからplayer:0を抽出
+//リストのソート（数字からマーク）i=0→j=0
+
+
+
+
+
 
 //スタートボタン座標設定
 let start_w = c.width/4;//start_wを変更すれば他は全て変更される
@@ -92,6 +102,27 @@ function first_display(){
   let logo_x = c.width/2-logopic.width/2;
   let logo_y = c.height/4-logopic.height/2;
   ctx.drawImage(logopic, logo_x ,logo_y);
+
+  //タイトル左横・・ボタンとして使用しない
+  backleft = new Image();
+  backleft.src="../images/button/joker.png";
+  let backleft_x = c.width/4-backleft.width/3;
+  let backleft_y = c.height/10-backleft.height/20;
+  ctx.drawImage(backleft, backleft_x ,backleft_y ,backleft.width/1.5 ,backleft.height/1.5);
+
+  //タイトル右横・・ボタンとして使用しない
+  backright = new Image();
+  backright.src="../images/button/joker.png";
+  let backright_x = c.width*3/4-backright.width/3;
+  let backright_y = c.height/10-backright.height/20;
+  ctx.drawImage(backright, backright_x ,backright_y ,backright.width/1.5 ,backright.height/1.5);
+
+  //タイトル真下・・ボタンとして使用しない
+  underlogo = new Image();
+  underlogo.src="../images/button/joker.png";
+  let underlogo_x = c.width/2-underlogo.width/3;
+  let underlogo_y = c.height/2-underlogo.height/50;
+  ctx.drawImage(underlogo, underlogo_x ,underlogo_y ,underlogo.width/1.5 ,underlogo.height/1.5);
 
   //スタートボタン
   start_button = new Image();
@@ -334,7 +365,7 @@ c.addEventListener('click',function(e){
 
 //トランプ座標管理（リスト）
 let position =[] //{"x":30,"y":60},{"x":}
-let space_x =c.width/20;
+let space_x =c.width/7;
 
 for (let index = 0; index < 20; index++) {
     
@@ -355,6 +386,12 @@ let  space =new function(){
     this.img = new Image();
     this.img.src = "images/card/heart3.jpg";
 
+    /*for(let index=0;index<=51;index++){
+      if(card[index].player==0){
+        ctx.drawImage(card[index].pic, card[index].x ,card[index].y);
+      }
+    }*/
+   
     if(com_num==2){
       for (let index = 0; index < 18; index++) {
         ctx.drawImage(this.img,position[index].x,position[index].y);
@@ -454,92 +491,39 @@ function player_num(){
     {"x":c.width-playerpic[5].width*2/3,"y":c.height/2-playerpic[5].height/6,"w":playerpic[5].width/3,"h":playerpic[5].height/3}
   ]
 
+  //comのカードの枚数
   for(let i=0;i<com_num;i++){
-    if(com_num==3){
+    if(com_num==2){
+      ctx.drawImage(playerpic[i], com2[i].x ,com2[i].y,com2[i].w,com2[i].h);
+      ctx.drawImage(nokori[com_card_num[0].a-1],com2[0].x+nokori[0].width*1.5/3, com2[0].y,nokori[0].width/3,nokori[0].height/3);
+      ctx.drawImage(nokori[com_card_num[0].b-1],com2[1].x-nokori[1].width*1.5/3, com2[1].y,nokori[1].width/3,nokori[1].height/3);
+    }else if(com_num==3){
+      ctx.drawImage(playerpic[i], com3[i].x ,com3[i].y,com3[i].w,com3[i].h);
       ctx.drawImage(nokori[com_card_num[1].a-1],com3[0].x+nokori[0].width*1.5/3, com3[0].y,nokori[0].width/3,nokori[0].height/3);
       ctx.drawImage(nokori[com_card_num[1].b-1],com3[1].x+nokori[1].width*1.5/3, com3[1].y,nokori[1].width/3,nokori[1].height/3);
       ctx.drawImage(nokori[com_card_num[1].c-1],com3[2].x-nokori[2].width*1.5/3, com3[2].y,nokori[2].width/3,nokori[2].height/3);
-    }
-
- }
-
-  //comのカードの枚数
-  for(let i=0;i<com_num;i++){
-    ctx.font = '40pt メイリオ';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = "left";
-
-    if(com_num==2){
-      ctx.drawImage(playerpic[i], com2[i].x ,com2[i].y,com2[i].w,com2[i].h);
-      ctx.drawImage(card_ura,com2[0].x+playerpic[0].width*1.5/3,com2[0].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com2[1].x-playerpic[1].width*0.5/3-100-card_ura.width*1.5/3,com2[1].y,card_ura.width/3,card_ura.height/3);
-    
-      ctx.fillText('×'+ String(com_card_num[0].a),com2[0].x+playerpic[0].width*1.5/3+card_ura.width*1.5/3, com2[0].y+card_ura.height/6);
-    
-      ctx.textAlign = "right";
-      ctx.fillText('×'+ String(com_card_num[0].b),com2[1].x-playerpic[1].width*0.5/3, com2[1].y+card_ura.height/6);
-
-    }else if(com_num==3){
-      ctx.drawImage(playerpic[i], com3[i].x ,com3[i].y,com3[i].w,com3[i].h);
-      //ctx.drawImage(card_ura,com3[0].x+playerpic[0].width*1.5/3,com3[0].y,card_ura.width/3,card_ura.height/3);//0人目
-      //ctx.drawImage(card_ura,com3[1].x+playerpic[1].width*1.5/3,com3[1].y,card_ura.width/3,card_ura.height/3);//1人目
-      //ctx.drawImage(card_ura,com3[2].x-playerpic[2].width*0.5/3-100-card_ura.width*1.5/3,com3[2].y,card_ura.width/3,card_ura.height/3);//2人目
-    
-      //ctx.fillText('×'+ String(com_card_num[1].a),com3[0].x+playerpic[0].width*1.5/3+card_ura.width*1.5/3, com3[0].y+card_ura.height/6);
-      //ctx.fillText('×'+ String(com_card_num[1].b),com3[1].x+playerpic[1].width*1.5/3+card_ura.width*1.5/3, com3[1].y+card_ura.height/6);
-    
-      //ctx.textAlign = "right";
-      //ctx.fillText('×'+ String(com_card_num[1].c),com3[2].x-playerpic[2].width*0.5/3, com3[2].y+card_ura.height/6);
-
     }else if(com_num==4){
       ctx.drawImage(playerpic[i], com4[i].x ,com4[i].y,com4[i].w,com4[i].h);
-      ctx.drawImage(card_ura,com4[0].x+playerpic[0].width*1.5/3,com4[0].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com4[1].x+playerpic[1].width*1.5/3,com4[1].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com4[2].x-playerpic[2].width*0.5/3-100-card_ura.width*1.5/3,com4[2].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com4[3].x-playerpic[3].width*0.5/3-100-card_ura.width*1.5/3,com4[3].y,card_ura.width/3,card_ura.height/3);
-    
-      ctx.fillText('×'+ String(com_card_num[2].a),com4[0].x+playerpic[0].width*1.5/3+card_ura.width*1.5/3, com4[0].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[2].b),com4[1].x+playerpic[1].width*1.5/3+card_ura.width*1.5/3, com4[1].y+card_ura.height/6);
-    
-      ctx.textAlign = "right";
-      ctx.fillText('×'+ String(com_card_num[2].c),com4[2].x-playerpic[2].width*0.5/3, com4[2].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[2].d),com4[3].x-playerpic[3].width*0.5/3, com4[3].y+card_ura.height/6);
-
+      ctx.drawImage(nokori[com_card_num[2].a-1],com4[0].x+nokori[0].width*1.5/3, com4[0].y,nokori[0].width/3,nokori[0].height/3);
+      ctx.drawImage(nokori[com_card_num[2].b-1],com4[1].x+nokori[2].width*1.5/3, com4[1].y,nokori[1].width/3,nokori[1].height/3);
+      ctx.drawImage(nokori[com_card_num[2].c-1],com4[2].x-nokori[2].width*1.5/3, com4[2].y,nokori[2].width/3,nokori[2].height/3);
+      ctx.drawImage(nokori[com_card_num[2].d-1],com4[3].x-nokori[3].width*1.5/3, com4[3].y,nokori[3].width/3,nokori[3].height/3);
     }else if(com_num==5){
       ctx.drawImage(playerpic[i], com5[i].x ,com5[i].y,com5[i].w,com5[i].h);
-      ctx.drawImage(card_ura,com5[0].x+playerpic[0].width*1.5/3,com5[0].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com5[1].x+playerpic[1].width*1.5/3,com5[1].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com5[2].x+playerpic[2].width*1.5/3,com5[2].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com5[3].x-playerpic[3].width*0.5/3-50-card_ura.width*1.5/3,com5[3].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com5[4].x-playerpic[4].width*0.5/3-50-card_ura.width*1.5/3,com5[4].y,card_ura.width/3,card_ura.height/3);
-    
-      ctx.fillText('×'+ String(com_card_num[3].a),com5[0].x+playerpic[0].width*1.5/3+card_ura.width*1.5/3, com5[0].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[3].b),com5[1].x+playerpic[1].width*1.5/3+card_ura.width*1.5/3, com5[1].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[3].c),com5[2].x+playerpic[2].width*1.2/3+card_ura.width*1.5/3, com5[2].y+card_ura.height/6);
-    
-      ctx.textAlign = "right";
-      ctx.fillText('×'+ String(com_card_num[3].d),com5[3].x-playerpic[3].width*0.5/3, com5[3].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[3].e),com5[4].x-playerpic[4].width*0.5/3, com5[4].y+card_ura.height/6);
-
+      ctx.drawImage(nokori[com_card_num[3].a-1],com5[0].x+nokori[0].width*1.5/3, com5[0].y,nokori[0].width/3,nokori[0].height/3);
+      ctx.drawImage(nokori[com_card_num[3].b-1],com5[1].x+nokori[1].width*1.5/3, com5[1].y,nokori[1].width/3,nokori[1].height/3);
+      ctx.drawImage(nokori[com_card_num[3].c-1],com5[2].x+nokori[2].width*1.5/3, com5[2].y,nokori[2].width/3,nokori[2].height/3);
+      ctx.drawImage(nokori[com_card_num[3].d-1],com5[3].x-nokori[3].width*1.5/3, com5[3].y,nokori[3].width/3,nokori[3].height/3);
+      ctx.drawImage(nokori[com_card_num[3].e-1],com5[4].x-nokori[4].width*1.5/3, com5[4].y,nokori[4].width/3,nokori[4].height/3);
     }else if(com_num==6){
       ctx.drawImage(playerpic[i], com6[i].x ,com6[i].y,com6[i].w,com6[i].h);
-      ctx.drawImage(card_ura,com6[0].x+playerpic[0].width*1.5/3,com6[0].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com6[1].x+playerpic[1].width*1.5/3,com6[1].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com6[2].x+playerpic[2].width*1.5/3,com6[2].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com6[3].x-playerpic[3].width*0.5/3-100-card_ura.width*1.5/3,com6[3].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com6[4].x-playerpic[4].width*0.5/3-100-card_ura.width*1.5/3,com6[4].y,card_ura.width/3,card_ura.height/3);
-      ctx.drawImage(card_ura,com6[5].x-playerpic[5].width*0.5/3-100-card_ura.width*1.5/3,com6[5].y,card_ura.width/3,card_ura.height/3);
-    
-      ctx.fillText('×'+ String(com_card_num[4].a),com6[0].x+playerpic[0].width*1.5/3+card_ura.width*1.5/3, com6[0].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[4].b),com6[1].x+playerpic[1].width*1.5/3+card_ura.width*1.5/3, com6[1].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[4].c),com6[2].x+playerpic[2].width*1.5/3+card_ura.width*1.5/3, com6[2].y+card_ura.height/6);
-    
-      ctx.textAlign = "right";
-      ctx.fillText('×'+ String(com_card_num[4].d),com6[3].x-playerpic[3].width*0.5/3, com6[3].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[4].e),com6[4].x-playerpic[4].width*0.5/3, com6[4].y+card_ura.height/6);
-      ctx.fillText('×'+ String(com_card_num[4].f),com6[5].x-playerpic[5].width*0.5/3, com6[5].y+card_ura.height/6);
-
-    } 
+      ctx.drawImage(nokori[com_card_num[4].a-1],com6[0].x+nokori[0].width*1.5/3, com6[0].y,nokori[0].width/3,nokori[0].height/3);
+      ctx.drawImage(nokori[com_card_num[4].b-1],com6[1].x+nokori[1].width*1.5/3, com6[1].y,nokori[1].width/3,nokori[1].height/3);
+      ctx.drawImage(nokori[com_card_num[4].c-1],com6[2].x+nokori[2].width*1.5/3, com6[2].y,nokori[2].width/3,nokori[2].height/3);
+      ctx.drawImage(nokori[com_card_num[4].d-1],com6[3].x-nokori[3].width*1.5/3, com6[3].y,nokori[3].width/3,nokori[3].height/3);
+      ctx.drawImage(nokori[com_card_num[4].e-1],com6[4].x-nokori[4].width*1.5/3, com6[4].y,nokori[4].width/3,nokori[4].height/3);
+      ctx.drawImage(nokori[com_card_num[4].f-1],com6[3].x-nokori[5].width*1.5/3, com6[5].y,nokori[5].width/3,nokori[5].height/3);
+    }
   }
 }
 
@@ -560,6 +544,59 @@ function play_buttons(){
   ctx.drawImage(pass_button, pass_x ,pass_y,pass_w,pass_h);
 
 }
+
+//end or continue画面・・・ここは動く！！
+/*function end_or_continue(){
+
+  //四角形
+  ctx.fillStyle="#bf023b";
+  ctx.fillRect(c.width/7,c.height/7,c.width*5/7,c.height*5/7);
+  ctx.strokeRect(c.width/7,c.height/7,c.width*5/7,c.height*5/7);
+
+  //FINISH
+  let finish_w = c.width/3
+  let finish_h = finish_w;
+  let finish_x = c.width/2-finish_w/2;
+  let finish_y = c.height*2/5-finish_h/2; 
+
+  finish_button = new Image();
+  finish_button.src="images/button/FINISH(背景透過ver).png";
+  ctx.drawImage(finish_button, finish_x ,finish_y,finish_w,finish_h);
+
+  //quitボタン
+  let quit_w = c.width/6;
+  let quit_h = quit_w/3;
+  let quit_x = c.width/3-quit_w/2;
+  let quit_y = c.height*2/3-quit_h/2; 
+
+  quit_button = new Image();
+  quit_button.src="images/button/quit.png";
+  ctx.drawImage(quit_button, quit_x ,quit_y,quit_w,quit_h);
+
+  //continueボタン
+  let continue_w = c.width/6;
+  let continue_h = continue_w/3;
+  let continue_x = c.width*2/3-continue_w/2;
+  let continue_y = c.height*2/3-continue_h/2;
+
+  continue_button = new Image();
+  continue_button.src="images/button/continue.png";
+  ctx.drawImage(continue_button, continue_x ,continue_y,continue_w,continue_h);
+
+  c.addEventListener('click',function(e){
+    if(quit_x <= e.clientX && e.clientX <= quit_x+quit_w && quit_y <= e.clientY && e.clientY <= quit_y+quit_h){
+      stop_title_flag=false;
+      start_game_flag=false;
+    }else if(continue_x <= e.clientX && e.clientX <= continue_x+continue_w && continue_y <= e.clientY && e.clientY <= continue_y+continue_h){
+      stop_title_flag=true;
+      start_game_flag=true;
+    }
+  });
+
+}*/
+
+
+
 
 //表示
 function loop(){
@@ -584,6 +621,7 @@ function loop(){
     space.draw();
     player_num();
     play_buttons();
+    //end_or_continue();
     requestAnimationFrame(loop);
   }
 }
