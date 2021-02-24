@@ -5,6 +5,13 @@ c.width = window.innerWidth;
 c.height = window.innerHeight;
 document.body.appendChild(c);
 
+ctx.fillStyle = "#005731";
+
+//フラグ集
+let title_flag = true;//タイトルのみtrue
+let setting_flag=false;
+let game_flag=false;
+
 //全てのカードのリスト
 let card=[]
 
@@ -41,10 +48,6 @@ for(let i=0;i<=12;i++){
 //自分のカードをplayer:0とする
 //cardリストからplayer:0を抽出
 //リストのソート（数字からマーク）i=0→j=0
-
-
-
-
 
 
 //スタートボタン座標設定
@@ -90,7 +93,7 @@ let com_num=3;
 
 //初期画面ボタン編
 function first_display(){
-
+  
   //文字の全体設定
   ctx.fillStyle = 'rgba(0,0,0)';
   ctx.textAlign = "center";
@@ -117,31 +120,31 @@ function first_display(){
   let backright_y = c.height/10-backright.height/20;
   ctx.drawImage(backright, backright_x ,backright_y ,backright.width/1.5 ,backright.height/1.5);
 
-  //タイトル真下・・ボタンとして使用しない
-  underlogo = new Image();
-  underlogo.src="../images/button/joker.png";
-  let underlogo_x = c.width/2-underlogo.width/3;
-  let underlogo_y = c.height/2-underlogo.height/50;
-  ctx.drawImage(underlogo, underlogo_x ,underlogo_y ,underlogo.width/1.5 ,underlogo.height/1.5);
+   //タイトル真下・・ボタンとして使用しない
+   underlogo = new Image();
+   underlogo.src="../images/button/joker.png";
+   let underlogo_x = c.width/2-underlogo.width/3;
+   let underlogo_y = c.height/2-underlogo.height/50;
+   ctx.drawImage(underlogo, underlogo_x ,underlogo_y ,underlogo.width/1.5 ,underlogo.height/1.5);
 
-  //スタートボタン
-  start_button = new Image();
-  start_button.src="images/button/start.png";
-  ctx.drawImage(start_button, start_x ,start_y,start_w,start_h);  
-  
-  //設定ボタン
-  setting_button = new Image();
-  setting_button.src="images/button/setting.png";
-  ctx.drawImage(setting_button, setting_x ,setting_y,setting_w,setting_h);  
+   //スタートボタン
+   start_button = new Image();
+   start_button.src="images/button/start.png";
+   ctx.drawImage(start_button, start_x ,start_y,start_w,start_h);  
+   
+   //設定ボタン
+   setting_button = new Image();
+   setting_button.src="images/button/setting.png";
+   ctx.drawImage(setting_button, setting_x ,setting_y,setting_w,setting_h);  
 
-  //商標の文字
-  let trademark_box_x=150;
-  let trademark_box_y=c.height-80;
-  ctx.fillStyle = 'white';
-  ctx.font = '15pt メイリオ';
-  ctx.fillText('©2020 Musashi 91期 inc.', trademark_box_x, trademark_box_y); 
-  
-}
+   //商標の文字
+   /*let trademark_box_x=150;
+   let trademark_box_y=c.height-80;
+   ctx.fillStyle = 'white';
+   ctx.font = '15pt メイリオ';
+   ctx.fillText('©2020 Musashi 91期 inc.', trademark_box_x, trademark_box_y); 
+   */
+ }
 
 //設定画面入力項目
 function setting(){
@@ -273,7 +276,7 @@ let down_box ={x:player.x+box.w*2/3+box.h/2+up_box.w,y:player.y+box.h/3,w:box.h/
 
 c.addEventListener('click',function(e){
   var rect = e.target.getBoundingClientRect();
-  if(start_setting_flag){
+  if(setting_flag){
     if(com_num <6 && up_box.x <= e.clientX && e.clientX <= up_box.x+up_box.w && up_box.y <= e.clientY && e.clientY <= up_box.y+up_box.h){
       com_num=com_num+1;
     }else if(2 < com_num && down_box.x <= e.clientX && e.clientX <= down_box.x+down_box.w && down_box.y <= e.clientY && e.clientY <= down_box.y+down_box.h){
@@ -282,29 +285,23 @@ c.addEventListener('click',function(e){
   }
 });
 
-
-//フラグ集（デフォルトはfalse）
-let stop_title_flag = false;
-let start_setting_flag=false;
-let start_game_flag=false;
-
 //クリックしたらフラグ起動(スタート＆設定画面)
 c.addEventListener('click',function(e){
-  if(!stop_title_flag){
+  if(title_flag){
     var rect = e.target.getBoundingClientRect();
     
     if(start_x <= e.clientX && e.clientX <= start_x+start_w && start_y <= e.clientY && e.clientY <= start_y+start_h){
-      stop_title_flag=true; 
-      start_game_flag=true;
+      title_flag=false; 
+      game_flag=true;
     }
     if(setting_x <= e.clientX && e.clientX <= setting_x+setting_w && setting_y <= e.clientY && e.clientY <= setting_y+setting_h){
-      stop_title_flag=true; 
-      start_setting_flag=true;
+      title_flag=false; 
+      setting_flag=true;
     }
   }
   else if(setting_back_x <= e.clientX && e.clientX <= setting_back_x+setting_back_w && setting_back_y <= e.clientY && e.clientY <= setting_back_y+setting_back_h){
-    start_setting_flag=false;
-    stop_title_flag=false;
+    setting_flag=false;
+    title_flag=true;
   }
 });
 
@@ -546,7 +543,7 @@ function play_buttons(){
 }
 
 //end or continue画面・・・ここは動く！！
-/*function end_or_continue(){
+function end_or_continue(){
 
   //四角形
   ctx.fillStyle="#bf023b";
@@ -585,38 +582,33 @@ function play_buttons(){
 
   c.addEventListener('click',function(e){
     if(quit_x <= e.clientX && e.clientX <= quit_x+quit_w && quit_y <= e.clientY && e.clientY <= quit_y+quit_h){
-      stop_title_flag=false;
-      start_game_flag=false;
+      title_flag=true;
+      game_flag=false;
     }else if(continue_x <= e.clientX && e.clientX <= continue_x+continue_w && continue_y <= e.clientY && e.clientY <= continue_y+continue_h){
-      stop_title_flag=true;
-      start_game_flag=true;
+      title_flag=false;
+      game_flag=true;
     }
   });
 
-}*/
-
-
+}
 
 
 //表示
 function loop(){
-  if(!stop_title_flag){
+  if(title_flag && !setting_flag && !game_flag){//タイトル画面
     ctx.fillStyle = "#005731";
-    ctx.globalAlpha = 1.0;
-    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillRect(0, 0, c.width, c.height);  
     first_display();    
     requestAnimationFrame(loop);
   }
-  if(start_setting_flag){
+  if(!title_flag && setting_flag && !game_flag){//設定画面
     ctx.fillStyle = "#005731";
-    ctx.globalAlpha = 1.0;
     ctx.fillRect(0, 0, c.width, c.height);
     setting();
     requestAnimationFrame(loop);
   }
-  if(start_game_flag){
+  if(!title_flag && !setting_flag && game_flag){//ゲーム画面
     ctx.fillStyle = "#005731";
-    ctx.globalAlpha = 1.0;
     ctx.fillRect(0, 0, c.width, c.height);
     space.draw();
     player_num();
@@ -627,3 +619,4 @@ function loop(){
 }
 
 loop();
+//nakamura();
